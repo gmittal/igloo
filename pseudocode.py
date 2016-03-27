@@ -31,4 +31,6 @@ def processSensorInput(sensor_data):
 
 
 # A set of inferred responder metrics which can be displayed on the HUD
-inferred_responder_metrics = processSensorInput(raw_responder_sensor_metrics)
+# These inferred metrics only contain what is most relevant at that specific time
+# The inferred_metrics object will not contian any data that is not relevant at that time (all data has to be displayed or useful in some way to the responder via the HUD)
+inferred__metrics = processSensorInput(raw_responder_sensor_metrics)
