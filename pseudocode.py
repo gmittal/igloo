@@ -3,7 +3,8 @@
 # Assume this data is updated in real time
 raw_responder_sensor_metrics = {
     heart_rate: 120,
-    microphone: "raw microphone data as an encoded string"
+    microphone: "raw microphone data as an encoded string",
+    barometer: 20,
     accelerometer: {
         glasses: {
             x: 140,
