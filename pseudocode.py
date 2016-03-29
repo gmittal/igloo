@@ -25,7 +25,13 @@ raw_responder_sensor_metrics = {
     location: {
         x: 10,
         y: 20
-    }
+    },
+    equipment: [ # equipment is entered via phone interface before mission
+        "first aid kit",
+        "infrared camera",
+        "external oxygen apparatus",
+        "shoring kit"
+    ]
 }
 
 # What is given to us or what we already know about the environment
@@ -120,12 +126,12 @@ raw_external_responder_metrics = {
 # Computer assisted decision making layer for providing likelihood of suriving certain situtations from an individual standpoint
 class DecisionMaking:
     # Assesses the probability of a responder being able to neutralize the threat
-    def hazardNeutralizationAssessment:
+    def hazardNeutralizationAssessment(hazardData, equipment):
         probability = 0.5
         return probability
 
     # Assesses survivability of trying to rescue a certain victim based on distance, hazard level, etc.
-    def victimSurvivabilityAssessment:
+    def victimSurvivabilityAssessment(victimData, completeH):
 
 
 
@@ -146,5 +152,6 @@ def processSensorInput(sensor_data):
 
 # A set of inferred responder metrics which can be displayed on the HUD
 # These inferred metrics only contain what is most relevant at that specific time
-# The inferred_metrics object will not contian any data that is not relevant at that time (all data has to be displayed or useful in some way to the responder via the HUD)
+# The inferred_metrics object will not contian any data that is not relevant at that
+# time (all data has to be displayed or useful in some way to the responder via the HUD)
 inferred__metrics = processSensorInput(raw_responder_sensor_metrics)
