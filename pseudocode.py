@@ -1,9 +1,9 @@
 # 2016 MIT Lincoln Lab IEEE Icehouse Challenge
 # By Alex Gao, Gautam Mittal, and Max Wang
 
+# Assume all placeholder data objects are updated in real time by sensors
 
 # Assume sensor input is given, this is all raw data returned by the various sensors
-# Assume this data is updated in real time
 raw_responder_sensor_metrics = {
     heart_rate: 120,
     microphone: "raw microphone data as an encoded string",
@@ -29,6 +29,7 @@ raw_responder_sensor_metrics = {
 }
 
 # What is given to us or what we already know about the environment
+# This information can change depending on (but is not reliant on) external communications from other responders
 raw_environment_given_metrics = {
     known_victim_locations: [
         {x: 15, y: 20},
@@ -64,7 +65,57 @@ raw_environment_given_metrics = {
 }
 
 
+# Requires a network connection (either bluetooth or Wifi) in order to know about
+# other responders' metrics
+raw_external_responder_metrics = {
+    "responder1": {
+            heart_rate: 120,
+            microphone: "raw microphone data as an encoded string",
+            barometer: 20,
+            accelerometer: {
+                glasses: {
+                    x: 140,
+                    y: 150,
+                    z: 10,
+                    gyro: 100
+                },
+                phone: {
+                    x: 140,
+                    y: 150,
+                    z: 10,
+                    gyro: 100
+                }
+            },
+            location: {
+                x: 10,
+                y: 20
+            }
+    },
 
+    "responder2": {
+            heart_rate: 90,
+            microphone: "raw microphone data as an encoded string",
+            barometer: 20,
+            accelerometer: {
+                glasses: {
+                    x: 140,
+                    y: 150,
+                    z: 10,
+                    gyro: 100
+                },
+                phone: {
+                    x: 140,
+                    y: 150,
+                    z: 10,
+                    gyro: 100
+                }
+            },
+            location: {
+                x: 10,
+                y: 20
+            }
+    },
+}
 
 # Computer assisted decision making layer for providing likelihood of suriving certain situtations from an individual standpoint
 class DecisionMaking:
@@ -75,7 +126,7 @@ class DecisionMaking:
 
     # Assesses survivability of trying to rescue a certain victim based on distance, hazard level, etc.
     def victimSurvivabilityAssessment:
-        
+
 
 
 
