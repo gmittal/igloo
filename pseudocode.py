@@ -1,7 +1,8 @@
 # 2016 MIT Lincoln Lab IEEE Icehouse Challenge
 # By Alex Gao, Gautam Mittal, and Max Wang
-
 # Assume all placeholder data objects are updated in real time by sensors
+
+import math
 
 # Assume sensor input is given, this is all raw data returned by the various sensors
 raw_responder_sensor_metrics = {
@@ -123,17 +124,46 @@ raw_external_responder_metrics = {
     },
 }
 
-# Computer assisted decision making layer for providing likelihood of suriving certain situtations from an individual standpoint
+# Computer assisted decision making layer for providing likelihood of suriving certain known situtations from an individual standpoint
 class DecisionMaking:
     # Assesses the probability of a responder being able to neutralize the threat
-    def hazardNeutralizationAssessment(hazardData, equipment):
+    def hazardNeutralizationAssessment(singleHazardData, equipmentList):
         probability = 0.5
         return probability
 
     # Assesses survivability of trying to rescue a certain victim based on distance, hazard level, etc.
-    def victimSurvivabilityAssessment(victimData, completeH):
+    def victimResponderSurvivabilityAssessment(victimLocation, responderLocation, completeHazardData):
+        victimToResponderDistance = math.sqrt(((victimLocation["x"]-responderLocation["x"])**2)+((victimLocation["y"]-responderLocation["y"])**2))
+
+        # Find the hazard closest to the victim (probably what's most likely affecting them)
+        hazardDistances = []
+        for hazard in completeHazardData:
+            victimToHazardDistance = math.sqrt(((victimLocation["x"]-hazard["location"]["x"])**2)+((victimLocation["y"]-hazard["location"]["y"])**2))
+            hazardDistances.append(victimToHazardDistance)
+        hazardDistances.sort()
+        closestHazardDistance = hazardDistances[0] # closest hazard
+
+        # Find the danger level of the closest hazard
+        closestHazardDangerLevel = 0
+        for hazard in completeHazardData:
+            victimToHazardDistance = math.sqrt(((victimLocation["x"]-hazard["location"]["x"])**2)+((victimLocation["y"]-hazard["location"]["y"])**2))
+            if victimToHazardDistance == closestHazardDistance:
+                closestHazardDangerLevel = hazard["danger_level"]
+                break
 
 
+        # The probability of survival for the victim and responder is contingent on three variables:
+        # Distance the hazard is away from the victim, distance the victim is from the responder, and the danger level of the hazard
+
+        # Absolute worst case scenario values
+        maxPossibleDangerLevel = 3
+        minPossibleVictimHazardDistance = 1
+        maxPossibleResponderDistance = 100 # the maxPossibleResponderDistance isn't actually this, this just a placeholder value, it should be calculated using the given dimensions of the room, and then should be equal to the length of the diagonal of the game room
+
+        # a really high surival constant means high chance of death, a really low number means very low chance of death
+        zero_survival_constant = maxPossibleDangerLevel*(maxPossibleResponderDistance-minPossibleVictimHazardDistance)
+
+        survival_probability = 1
 
 
 # Process all raw data -- function returns inferred metrics/suggested decisions
