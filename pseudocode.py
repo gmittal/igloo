@@ -3,6 +3,9 @@
 # Assume all placeholder data objects are updated in real time by sensors
 
 import math
+import numpy as np
+from utils import *
+
 
 # Assume sensor input is given, this is all raw data returned by the various sensors
 raw_responder_sensor_metrics = {
@@ -124,7 +127,7 @@ raw_external_responder_metrics = {
     },
 }
 
-# Computer assisted decision making layer for providing likelihood of suriving certain known situtations from an individual standpoint
+# Computer assisted decision making layer for providing likelihood of surviving certain known situtations from an individual standpoint
 class DecisionMaking:
     # Assesses the probability of a responder being able to neutralize the threat
     def hazardNeutralizationAssessment(singleHazardData, equipmentList):
@@ -136,12 +139,18 @@ class DecisionMaking:
         victimToResponderDistance = math.sqrt(((victimLocation["x"]-responderLocation["x"])**2)+((victimLocation["y"]-responderLocation["y"])**2))
 
         # Find the hazard closest to the victim (probably what's most likely affecting them)
-        hazardDistances = []
+        hazardDisplacement = []
         for hazard in completeHazardData:
             victimToHazardDistance = math.sqrt(((victimLocation["x"]-hazard["location"]["x"])**2)+((victimLocation["y"]-hazard["location"]["y"])**2))
-            hazardDistances.append(victimToHazardDistance)
+            hazardDisplacement.append(victimToHazardDistance)
+        hazardDisplacement.sort()
+        closestHazardDistance = hazardDisplacement[0] # closest hazard
+
+        hazardDistances = []
+        for hazard in completeHazardData:
+            #A* or other similar pathfinding algorithms
         hazardDistances.sort()
-        closestHazardDistance = hazardDistances[0] # closest hazard
+        optimalHazardDistance = hazardDistances[0]
 
         # Find the danger level of the closest hazard
         closestHazardDangerLevel = 0
@@ -158,15 +167,83 @@ class DecisionMaking:
         # Absolute worst case scenario values
         maxPossibleDangerLevel = 3
         minPossibleVictimHazardDistance = 1
-        maxPossibleResponderDistance = 100 # the maxPossibleResponderDistance isn't actually this, this just a placeholder value, it should be calculated using the given dimensions of the room, and then should be equal to the length of the diagonal of the game room
+        maxPossibleResponderDistance = 100 # the maxPossibleResponderDistance isn't actually this, this just a placeholder value,
+                                           # it should be calculated using the given dimensions of the room, and then should be equal to the length of the diagonal of the game room
 
         # a really high surival constant means high chance of death, a really low number means very low chance of death
         zero_survival_constant = maxPossibleDangerLevel*(maxPossibleResponderDistance-minPossibleVictimHazardDistance)
 
         survival_probability = 1
 
+#Value Iteration function for Markov Decision Process(MDP) that returns optimal policy given state, rewards, and threshold
+#Initialize value function V(s) arbitrarily for all states s
+#repeat until convergence
+#for each state s
+#   V(s) := max Q-value for a state-action pair, with Bellman Equation
+#see http://burlap.cs.brown.edu/tutorials/cpl/p1.html
+#and https://www.cs.ubc.ca/~kevinlb/teaching/cs322%20-%202008-9/Lectures/DT4.pdf
+#important http://aima.cs.berkeley.edu/python/mdp.html
 
-# Process all raw data -- function returns inferred metrics/suggested decisions
+
+class MDP:
+    """A Markov Decision Process, defined by an initial state, transition model,
+    and reward function. Gamma is for algorithms. Based off of Artificial Intelligence: A Modern Approach by Peter Norvig"""
+
+    def __init__(self, init, actlist, terminals, gamma=.9):
+        update(self, init=init, actlist=actlist, terminals=terminals,
+               gamma=gamma, states=set(), reward={})
+
+    def R(self, state):
+        "Return a numeric reward for this state."
+        return self.reward[state]
+
+    def T(state, action):
+        """Transition model.  From a state and an action, return a list
+        of (result-state, probability) pairs."""
+        abstract
+
+    def actions(self, state):
+        """Set of actions that can be performed in this state.  By default, a
+        fixed list of actions, except for terminal states. Override this
+        method if you need to specialize by state."""
+        if state in self.terminals:
+            return [None]
+        else:
+            return self.actlist
+
+
+def value_iteration(mdp, epsilon=0.001):
+    "Solving an MDP by value iteration. [Fig. 17.4]"
+    U1 = dict([(s, 0) for s in mdp.states])
+    R, T, gamma = mdp.R, mdp.T, mdp.gamma
+    while True:
+        U = U1.copy()
+        delta = 0
+        for s in mdp.states:
+            U1[s] = R(s) + gamma * max([sum([p * U[s1] for (p, s1) in T(s, a)])
+                                        for a in mdp.actions(s)])
+            delta = max(delta, abs(U1[s] - U[s]))
+        if delta < epsilon * (1 - gamma) / gamma:
+            return U
+
+
+
+#POMDP Value Iteration Pseudocode
+
+function pomdpValueIteration(pomdp, epsilon)
+inputs: pomdp, a POMDP with states S, actions A(s), transition model P(s'|s,a), sensor model P(e|s), rewards R(s), discount gamma
+returns: an utility function
+
+local variables: U, U', sets of plans p with associated utility vectors alpha
+
+#I need to figure out the rest, will update soon
+
+
+
+
+
+
+# Process all raw data -- function returns inferred metrics/suggested decisionsr
 # This influences what will finally get displayed on the HUD
 
 # Key metrics that need to be gleaned: Individual responder sensor data and biometrics,
