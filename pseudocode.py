@@ -6,6 +6,8 @@ import math
 import numpy as np
 from utils import *
 
+Victims = 0
+Responders = 0
 
 # Assume sensor input is given, this is all raw data returned by the various sensors
 raw_responder_sensor_metrics = {
@@ -144,7 +146,7 @@ class DecisionMaking:
             victimToHazardDistance = math.sqrt(((victimLocation["x"]-hazard["location"]["x"])**2)+((victimLocation["y"]-hazard["location"]["y"])**2))
             hazardDisplacement.append(victimToHazardDistance)
         hazardDisplacement.sort()
-        closestHazardDistance = hazardDisplacement[0] # closest hazard
+        closestHazardDisplacement = hazardDisplacement[0] # closest hazard
 
         hazardDistances = []
         for hazard in completeHazardData:
@@ -156,7 +158,7 @@ class DecisionMaking:
         closestHazardDangerLevel = 0
         for hazard in completeHazardData:
             victimToHazardDistance = math.sqrt(((victimLocation["x"]-hazard["location"]["x"])**2)+((victimLocation["y"]-hazard["location"]["y"])**2))
-            if victimToHazardDistance == closestHazardDistance:
+            if victimToHazardDistance == closestHazardDisplacement:
                 closestHazardDangerLevel = hazard["danger_level"]
                 break
 
@@ -235,9 +237,6 @@ inputs: pomdp, a POMDP with states S, actions A(s), transition model P(s'|s,a), 
 returns: an utility function
 
 local variables: U, U', sets of plans p with associated utility vectors alpha
-
-#I need to figure out the rest, will update soon
-
 
 
 
