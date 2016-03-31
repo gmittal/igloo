@@ -177,7 +177,20 @@ class DecisionMaking:
 
         survival_probability = 1
 
-#Value Iteration function for Markov Decision Process(MDP) that returns optimal policy given state, rewards, and threshold
+
+#Markov Decision Process
+#State = Room
+#Action = Moving into Room
+#Transitions = Probability of 1 of moving into Room specified by Action
+#Reward = Progress
+#   When Reward -> -50, then worker dies
+#   Reward similar to Exposure
+#   Tech changes Reward for each applicable hazard in room.
+#
+
+
+
+#Value Iteration function for Markov Decision Process (MDP) and Partially Observable Markov Decision Process (POMDP) that returns optimal policy given state, rewards, and threshold
 #Initialize value function V(s) arbitrarily for all states s
 #repeat until convergence
 #for each state s
