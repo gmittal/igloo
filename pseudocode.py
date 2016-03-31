@@ -247,10 +247,17 @@ def value_iteration(mdp, epsilon=0.001):
 
 function pomdpValueIteration(pomdp, epsilon)
 inputs: pomdp, a POMDP with states S, actions A(s), transition model P(s'|s,a), sensor model P(e|s), rewards R(s), discount gamma
+#states: rooms
+#actions: moving between 2 rooms
+#transitional probability is 1
+#rewards: negative for hazards, positive for victims
+#discount: to be determined
+
 returns: an utility function
 
 local variables: U, U', sets of plans p with associated utility vectors alpha
 
+#to be completed
 
 
 
