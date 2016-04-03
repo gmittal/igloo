@@ -227,37 +227,26 @@ class MDP:
             return self.actlist
 
 
-def value_iteration(mdp, epsilon=0.001):
-    "Solving an MDP by value iteration. [Fig. 17.4]"
-    U1 = dict([(s, 0) for s in mdp.states])
-    R, T, gamma = mdp.R, mdp.T, mdp.gamma
-    while True:
-        U = U1.copy()
-        delta = 0
-        for s in mdp.states:
-            U1[s] = R(s) + gamma * max([sum([p * U[s1] for (p, s1) in T(s, a)])
-                                        for a in mdp.actions(s)])
-            delta = max(delta, abs(U1[s] - U[s]))
-        if delta < epsilon * (1 - gamma) / gamma:
-            return U
 
+#Partially Observable Monte-Carlo Planning
+#used for POMDP
+#Online, partially observable, can be deterministic
 
+function Search(h)
+    repeat
+        if h is empty then
+            s != I
+        else
+            s != B(h)
+        end if
+        Simulate(s, h, 0)
+    until Timeout()
+    return argmaxV(hb)
+end
 
-#POMDP Value Iteration Pseudocode
+function Rollout(s, h, depth)
 
-function pomdpValueIteration(pomdp, epsilon)
-inputs: pomdp, a POMDP with states S, actions A(s), transition model P(s'|s,a), sensor model P(e|s), rewards R(s), discount gamma
-#states: rooms
-#actions: moving between 2 rooms
-#transitional probability is 1
-#rewards: negative for hazards, positive for victims
-#discount: to be determined
-
-returns: an utility function
-
-local variables: U, U', sets of plans p with associated utility vectors alpha
-
-#to be completed
+function Simulate(s, h, depth)
 
 
 
